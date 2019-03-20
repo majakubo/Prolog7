@@ -45,16 +45,16 @@
         czy_puste(B, T). 
      
      
-    podmien(Index, Elem, [_|T], [Elem|T]) :-
+    podmien_w_liscie(Index, Elem, [_|T], [Elem|T]) :-
         Index = 0, !. 
-    podmien(Index, Elem, [H|T], [H|Out]) :-
+    podmien_w_liscie(Index, Elem, [H|T], [H|Out]) :-
         Index1 is Index - 1,
-        podmien(Index1, Elem, T, Out).  
+        podmien_w_liscie(Index1, Elem, T, Out).  
      
-    wstaw([X1,Y1,C],B, Bnew) :-
+    wstaw_do_dwuwymiarowej([X1,Y1,C],B, Bnew) :-
         nth0(X1, B, ColFrom),
-        podmien(Y1, C, ColFrom, ColFromNew),
-        podmien(X1, ColFromNew, B, Bnew).
+        podmien_w_liscie(Y1, C, ColFrom, ColFromNew),
+        podmien_w_liscie(X1, ColFromNew, B, Bnew).
 		
         
 %wykonaj_przesuniecia(_, []):- !.
