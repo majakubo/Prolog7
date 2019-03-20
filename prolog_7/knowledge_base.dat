@@ -56,11 +56,13 @@
         podmien_w_liscie(Y1, C, ColFrom, ColFromNew),
         podmien_w_liscie(X1, ColFromNew, B, Bnew).
 		
+    wykonaj_wiele_przemieszczen([], B, Bnew):-
+        Bnew = B, !.
+    wykonaj_wiele_przemieszczen([H|T], B, Bnew):-
+    	wstaw_do_dwuwymiarowej(H, B, Btemp),
+        wykonaj_wiele_przemieszczen(T, Btemp, Bnew).
+       
         
-%wykonaj_przesuniecia(_, []):- !.
-%	wykonaj_przesuniecia(B, [H|T]):-
-%        [X, Y, Z] is H
- %       przesun(
-        
+    
      
      
