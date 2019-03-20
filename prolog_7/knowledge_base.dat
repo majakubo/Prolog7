@@ -1,9 +1,11 @@
-    plansza([[b1r,b1 ,r1r,r1 ,x  ,g1r,y1r],
-             [b1 ,b1 ,x  ,r2r,r2 ,x  ,y1 ],
-             [x  ,x  ,x  ,y2r,g2r,x  ,y3r],
-             [p1r,p1 ,x  ,y2 ,g3r,x  ,y3],
-             [p1 ,p1 ,x  ,x  ,x  ,b2r,b2],
-             [p1 ,p1 ,x  ,r3r,r3 ,b2 ,b2]]).
+    plansza([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
+			 [w,  b1R,b1 ,r1R,r1 ,x  ,g1R,y1R,w  ],
+             [w,  b1 ,b1 ,x  ,r2R,r2 ,x  ,y1 ,w  ],
+             [w,  x  ,x  ,x  ,y2R,g2R,x  ,y3R,w  ],
+             [w,  p1r,p1 ,x  ,y2 ,g3R,x  ,y3 ,w  ],
+             [w,  p1 ,p1 ,x  ,x  ,x  ,b2R,b2 ,w  ],
+             [w,  p1 ,p1 ,x  ,r3R,r3 ,b2 ,b2 ,w  ],
+             [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
      
     blue(b1r).
     blue(b2r).
@@ -30,21 +32,21 @@
     green(g1r).
     green(g2r).
     green(g3r).
-     
-     
+    
+    
      
     %pozycja(B, X,Y,b1).
-    pozycja(B, X, Y, Char) :-
-        nth0(X, B, Column), 
-        nth0(Y, Column, Char).
+    pozycja(B, Y, X, Char) :-
+        nth0(Y, B, Column), 
+        nth0(X, Column, Char).
      
     %%czy_puste(B,[[X,Y]|[]]).
-    czy_puste(_, []) :- !.
-    czy_puste(B, [[X, Y]|T]) :-
-        pozycja(B, X, Y, x),
-        czy_puste(B, T). 
-     
-     
+    czy_puste(B, Y, X) :-
+        pozycja(B, Y, X, x).
+    
+    czy_sciana(B, Y, X):-
+        pozycja(B, Y, X, w).
+              
     podmien_w_liscie(Index, Elem, [_|T], [Elem|T]) :-
         Index = 0, !. 
     podmien_w_liscie(Index, Elem, [H|T], [H|Out]) :-
@@ -82,6 +84,38 @@
         N is Y+1,
         wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
 
+	czy_mozliwy_zielony_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        \+ czy_sciana(B, Y+1, X), 
+         czy_wolne(B, Y+1, X),
+         wykonaj_ruch_zielony_dol(R, B, Bnew).
+
+	czy_mozliwy_zielony_dol(R, B, Bnew):-
+        \+ czy_sciana(B, Y, X), 
+        \+ czy_wolne(B, Y, X),
+         znajdz_rog_przeszkody(R, B, Rprzeszkody),
+         przemiesc(Rprzeszkody, B),
+         wykonaj_ruch_zielony_dol(R, B, Bnew).
+
+	znajdz_rog_przeszkody(R, B, Rprzeszkody):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        czy_jest_rogiem(Z),
+        Rprzeszody is [Y, X, Z].
+    
+    znajdz_rog_przeszody(R, B, Rprzeszkody):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        \+czy_jest_rogiem(Z),
+        string_chars(Z, Str),
+        append(Str, ['R'], ListRog),
+        string_chars(Zprzeszkody, ListRog),
+        pozycja(B, Xn, Yn, Zprzeszkody),
+        Rprzeszkody is [Yn, Xn, Zprzeszkody].
+    
+
+
+czy_jest_rogiem(Z):-
+    string_chars(Z, Str),
+    nth0(Q, Str, r).
              
         
        
