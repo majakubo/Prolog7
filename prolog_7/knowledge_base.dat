@@ -51,12 +51,16 @@
         Index1 is Index - 1,
         podmien(Index1, Elem, T, Out).  
      
-    przesun([[X1,Y1,C, X2, Y2]]) :-
+    wstaw([X1,Y1,C],B, Bnew) :-
         nth0(X1, B, ColFrom),
-        podmien(Y1, e, ColFrom, ColFromNew),
-        podmien(X1, ColFromNew, B, Bnew),
-        nth0(X2, Bnew, ColTo),
-        podmien(Y2, C, ColTo, ColToNew),
-        podmien(X2, ColToNew, Bnew, Bout).
+        podmien(Y1, C, ColFrom, ColFromNew),
+        podmien(X1, ColFromNew, B, Bnew).
+		
+        
+%wykonaj_przesuniecia(_, []):- !.
+%	wykonaj_przesuniecia(B, [H|T]):-
+%        [X, Y, Z] is H
+ %       przesun(
+        
      
      
