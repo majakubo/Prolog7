@@ -66,22 +66,21 @@
     wykonaj_wiele_przemieszczen([H|T], B, Bnew):-
     	wstaw_do_dwuwymiarowej(H, B, Btemp),
         wykonaj_wiele_przemieszczen(T, Btemp, Bnew).
-	rozpakuj_jedno_elementowa_liste([H|_], X):-
-        X is H.
+	rozpakuj_jedno_elementowa_liste([H|_], A):-
+        A is H.
 	
-    rozpakuj_dwu_elementowa_liste([H|T], X, Y):-
-        rozpakuj_jedno_elementowa_liste(T, Y),
-        X is H.
+    rozpakuj_dwu_elementowa_liste([H|T], A, B):-
+        rozpakuj_jedno_elementowa_liste(T, B),
+        A is H.
 	
-    rozpakuj_trzy_elementowa_liste([H|T], X, Y, Z):-
-        X is H,
-        rozpakuj_dwu_elementowa_liste(T, Y, Z).
-    
+    rozpakuj_trzy_elementowa_liste([H|T], A, B, C):-
+        A is H,
+        rozpakuj_dwu_elementowa_liste(T, B, C).
     
 	wykonaj_ruch_zielony_dol(R, B, Bnew):-
-        X is [X|R],
-        [Y|Z] is T,
-        wykonaj_wiele_przemieszczen([[X, Y, x], [X, Y+1, Z]], B, Bnew).
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is Y+1,
+        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
 
              
         
