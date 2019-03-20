@@ -1,0 +1,62 @@
+    plansza([[b1r,b1 ,r1r,r1 ,x  ,g1r,y1r],
+             [b1 ,b1 ,x  ,r2r,r2 ,x  ,y1 ],
+             [x  ,x  ,x  ,y2r,g2r,x  ,y3r],
+             [p1r,p1 ,x  ,y2 ,g3r,x  ,y3],
+             [p1 ,p1 ,x  ,x  ,x  ,b2r,b2],
+             [p1 ,p1 ,x  ,r3r,r3 ,b2 ,b2]]).
+     
+    blue(b1r).
+    blue(b2r).
+    blue(b1).
+    blue(b2).
+     
+    red(r1r).
+    red(r2r).
+    red(r3r).
+    red(r1).
+    red(r2).
+    red(r3).
+     
+    purple(p1r).
+    purple(p1).
+     
+    yellow(y1r).
+    yellow(y2r).
+    yellow(y3r).
+    yellow(y1).
+    yellow(y2).
+    yellow(y3).
+     
+    green(g1r).
+    green(g2r).
+    green(g3r).
+     
+     
+     
+    %pozycja(B, X,Y,b1).
+    pozycja(B, X, Y, Char) :-
+        nth0(X, B, Column), 
+        nth0(Y, Column, Char).
+     
+    %%czy_puste(B,[[X,Y]|[]]).
+    czy_puste(_, []) :- !.
+    czy_puste(B, [[X, Y]|T]) :-
+        pozycja(B, X, Y, x),
+        czy_puste(B, T). 
+     
+     
+    podmien(Index, Elem, [_|T], [Elem|T]) :-
+        Index = 0, !. 
+    podmien(Index, Elem, [H|T], [H|Out]) :-
+        Index1 is Index - 1,
+        podmien(Index1, Elem, T, Out).  
+     
+    przesun([[X1,Y1,C, X2, Y2]]) :-
+        nth0(X1, B, ColFrom),
+        podmien(Y1, e, ColFrom, ColFromNew),
+        podmien(X1, ColFromNew, B, Bnew),
+        nth0(X2, Bnew, ColTo),
+        podmien(Y2, C, ColTo, ColToNew),
+        podmien(X2, ColToNew, Bnew, Bout).
+     
+     
