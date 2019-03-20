@@ -55,12 +55,36 @@
         nth0(X1, B, ColFrom),
         podmien_w_liscie(Y1, C, ColFrom, ColFromNew),
         podmien_w_liscie(X1, ColFromNew, B, Bnew).
-		
+	
+
+    %corner case		
     wykonaj_wiele_przemieszczen([], B, Bnew):-
         Bnew = B, !.
+
+	%wykonaj_wiele_przemieszczen(lista wspolrzednych i znakow->[[x, y, z]..],
+	%                            Board, Bnew)
     wykonaj_wiele_przemieszczen([H|T], B, Bnew):-
     	wstaw_do_dwuwymiarowej(H, B, Btemp),
         wykonaj_wiele_przemieszczen(T, Btemp, Bnew).
+	rozpakuj_jedno_elementowa_liste([H|_], X):-
+        X is H.
+	
+    rozpakuj_dwu_elementowa_liste([H|T], X, Y):-
+        rozpakuj_jedno_elementowa_liste(T, Y),
+        X is H.
+	
+    rozpakuj_trzy_elementowa_liste([H|T], X, Y, Z):-
+        X is H,
+        rozpakuj_dwu_elementowa_liste(T, Y, Z).
+    
+    
+	wykonaj_ruch_zielony_dol(R, B, Bnew):-
+        X is [X|R],
+        [Y|Z] is T,
+        wykonaj_wiele_przemieszczen([[X, Y, x], [X, Y+1, Z]], B, Bnew).
+
+             
+        
        
         
     
