@@ -4,8 +4,8 @@ zadanie(ZAD):- ZAD = zadanie1.
 			 [w,  b1R,b1 ,r1R,r1 ,x  ,g1R,y1R,w  ],
              [w,  b1 ,b1 ,x  ,r2R,r2 ,x  ,y1 ,w  ],
              [w,  x  ,x  ,x  ,y2R,g2R,x  ,y3R,w  ],
-             [w,  p1R,w ,z  ,w ,g3R,x  ,y3 ,w  ],
-             [w,  p1 ,w ,w  ,w  ,x  ,b2R,b2 ,w  ],
+             [w,  p1R,p1 ,z  ,y2 ,g3R,x  ,y3 ,w  ],
+             [w,  p1 ,p1 ,x  ,x  ,x  ,b2R,b2 ,w  ],
              [w,  p1 ,p1 ,x  ,r3R,r3 ,b2 ,b2 ,w  ],
              [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
 % Manipulacja stringiem
