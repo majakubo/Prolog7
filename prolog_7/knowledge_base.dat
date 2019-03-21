@@ -68,16 +68,14 @@
         wykonaj_wiele_przemieszczen(T, Btemp, Bnew).
 	
 % ROZPAKOWYWANIE LISTY
-    rozpakuj_jedno_elementowa_liste([H|_], A):-
-        A is H.
+    rozpakuj_jedno_elementowa_liste([H|_], H).
 	
-    rozpakuj_dwu_elementowa_liste([H|T], A, B):-
-        rozpakuj_jedno_elementowa_liste(T, B),
-        A is H.
+    rozpakuj_dwu_elementowa_liste([H|T], H, B):-
+        rozpakuj_jedno_elementowa_liste(T, B).
 	
-    rozpakuj_trzy_elementowa_liste([H|T], A, B, C):-
-        A is H,
+    rozpakuj_trzy_elementowa_liste([H|T], H, B, C):-
         rozpakuj_dwu_elementowa_liste(T, B, C).
+
     
 % ZNAJDYWANIE ROGU
 %	znajdz_rog_przeszkody(R, B, Rprzeszkody):-
