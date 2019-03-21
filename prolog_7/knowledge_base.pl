@@ -91,8 +91,8 @@ zadanie(ZAD):- ZAD = zadanie1.
 % ZNAJDYWANIE ROGU
      
      znajdz_rog_przeszkody(R, _, R):-
-         rozpakuj_trzy_elementowa_liste(R, _, _, Z).
-         czy_rog(Z)!.
+         rozpakuj_trzy_elementowa_liste(R, _, _, Z),
+         czy_jest_rogiem(Z), !.
      znajdz_rog_przeszkody(R, B, [Yr,Xr, CharNew]) :-
         rozpakuj_trzy_elementowa_liste(R, _, _, C),
         atom_concat(C, 'R', CharNew),
@@ -124,7 +124,7 @@ zadanie(ZAD):- ZAD = zadanie1.
 
 
 % Możliwość poruszania się	
-	porusz(X):- 1 = 1.
+
     %zielony dol 
     czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
         Kierunek = d,
@@ -144,8 +144,8 @@ zadanie(ZAD):- ZAD = zadanie1.
         \+ czy_sciana(B, Y1, X, Z),
         pozycja(B, Y1, X, C),
         znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
-        porusz(Rnew),
-        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+        przemiesc(Rnew, B, BnewT),
+        wykonaj_ruch(R, BnewT, Bnew, Kierunek, Kolor),!.
     
     %zielony gora 
     czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
@@ -166,8 +166,8 @@ zadanie(ZAD):- ZAD = zadanie1.
         \+ czy_sciana(B, Y1, X, Z),
         pozycja(B, Y1, X, C),
         znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
-        porusz(Rnew),
-        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+        przemiesc(Rnew, B, BnewT),
+        wykonaj_ruch(R, BnewT, Bnew, Kierunek, Kolor),!.
     
     %zielony lewo  
     czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
@@ -188,8 +188,8 @@ zadanie(ZAD):- ZAD = zadanie1.
         \+ czy_sciana(B, Y, X1, Z),
         pozycja(B, Y, X1, C),
         znajdz_rog_przeszkody([Y, X1, C], B, Rnew),
-        porusz(Rnew),
-        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+        przemiesc(Rnew, B, BnewT),
+        wykonaj_ruch(R, BnewT, Bnew, Kierunek, Kolor),!.
 	
     %zielony prawo
 	czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
@@ -210,8 +210,8 @@ zadanie(ZAD):- ZAD = zadanie1.
         \+ czy_sciana(B, Y1, X, Z),
         pozycja(B, Y, X1, C),
         znajdz_rog_przeszkody([Y, X1, C], B, Rnew),
-        porusz(Rnew),
-        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+        przemiesc(Rnew, B, BnewT),
+        wykonaj_ruch(R, BnewT, Bnew, Kierunek, Kolor),!.
 	
 	
 	
