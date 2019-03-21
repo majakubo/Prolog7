@@ -6,47 +6,47 @@
              [w,  p1 ,p1 ,x  ,x  ,x  ,b2R,b2 ,w  ],
              [w,  p1 ,p1 ,x  ,r3R,r3 ,b2 ,b2 ,w  ],
              [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
+
+% REGUŁY PRZYNALEŻNOŚCI DO KOLORÓW i ROGÓW
+    blue(C):-
+        string_chars(C, [H|_]),
+        H = b.
+        
+    red(C):-
+        string_chars(C, [H|_]),
+        H = r.
      
-    blue(b1r).
-    blue(b2r).
-    blue(b1).
-    blue(b2).
+    purple(C):-
+        string_chars(C, [H|_]),
+        H = p.
      
-    red(r1r).
-    red(r2r).
-    red(r3r).
-    red(r1).
-    red(r2).
-    red(r3).
-     
-    purple(p1r).
-    purple(p1).
-     
-    yellow(y1r).
-    yellow(y2r).
-    yellow(y3r).
-    yellow(y1).
-    yellow(y2).
-    yellow(y3).
-     
-    green(g1r).
-    green(g2r).
-    green(g3r).
+    yellow(C):-
+        string_chars(C, [H|_]),
+        H = y.
+
+    green(C):-
+        string_chars(C, [H|_]),
+        H = g.
     
-    
-     
-    %pozycja(B, X,Y,b1).
-    pozycja(B, Y, X, Char) :-
-        nth0(Y, B, Column), 
-        nth0(X, Column, Char).
-     
+
+    czy_jest_rogiem(Z):-
+        string_chars(Z, Str),
+        nth0(_, Str, r).
+
+%SPRAWDZANIE OBIEKTU NA POLU X Y    
     %%czy_puste(B,[[X,Y]|[]]).
     czy_puste(B, Y, X) :-
         pozycja(B, Y, X, x).
     
     czy_sciana(B, Y, X):-
-        pozycja(B, Y, X, w).
-              
+        pozycja(B, Y, X, w).        
+    
+    pozycja(B, Y, X, Char) :-
+        nth0(Y, B, Column), 
+        nth0(X, Column, Char).
+
+
+% REGUŁY MODYFIKOWANIA PLANSZY
     podmien_w_liscie(Index, Elem, [_|T], [Elem|T]) :-
         Index = 0, !. 
     podmien_w_liscie(Index, Elem, [H|T], [H|Out]) :-
@@ -58,8 +58,6 @@
         podmien_w_liscie(Y1, C, ColFrom, ColFromNew),
         podmien_w_liscie(X1, ColFromNew, B, Bnew).
 	
-
-    %corner case		
     wykonaj_wiele_przemieszczen([], B, Bnew):-
         Bnew = B, !.
 
@@ -68,7 +66,9 @@
     wykonaj_wiele_przemieszczen([H|T], B, Bnew):-
     	wstaw_do_dwuwymiarowej(H, B, Btemp),
         wykonaj_wiele_przemieszczen(T, Btemp, Bnew).
-	rozpakuj_jedno_elementowa_liste([H|_], A):-
+	
+% ROZPAKOWYWANIE LISTY
+    rozpakuj_jedno_elementowa_liste([H|_], A):-
         A is H.
 	
     rozpakuj_dwu_elementowa_liste([H|T], A, B):-
@@ -79,11 +79,22 @@
         A is H,
         rozpakuj_dwu_elementowa_liste(T, B, C).
     
-	wykonaj_ruch_zielony_dol(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        N is Y+1,
-        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
-
+% ZNAJDYWANIE ROGU
+%	znajdz_rog_przeszkody(R, B, Rprzeszkody):-
+%        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+%        czy_jest_rogiem(Z),
+%        Rprzeszody is [Y, X, Z].
+    
+%    znajdz_rog_przeszody(R, B, Rprzeszkody):-
+%        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+%        \+czy_jest_rogiem(Z),
+%        string_chars(Z, Str),
+%        append(Str, ['R'], ListRog),
+%        string_chars(Zprzeszkody, ListRog),
+%        pozycja(B, Xn, Yn, Zprzeszkody),
+%        Rprzeszkody is [Yn, Xn, Zprzeszkody].
+        
+% Możliwość poruszania się	
 	czy_mozliwy_zielony_dol(R, B, Bnew):-
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         \+ czy_sciana(B, Y+1, X), 
@@ -97,29 +108,142 @@
          przemiesc(Rprzeszkody, B),
          wykonaj_ruch_zielony_dol(R, B, Bnew).
 
-	znajdz_rog_przeszkody(R, B, Rprzeszkody):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        czy_jest_rogiem(Z),
-        Rprzeszody is [Y, X, Z].
-    
-    znajdz_rog_przeszody(R, B, Rprzeszkody):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        \+czy_jest_rogiem(Z),
-        string_chars(Z, Str),
-        append(Str, ['R'], ListRog),
-        string_chars(Zprzeszkody, ListRog),
-        pozycja(B, Xn, Yn, Zprzeszkody),
-        Rprzeszkody is [Yn, Xn, Zprzeszkody].
+
     
 
 
-czy_jest_rogiem(Z):-
-    string_chars(Z, Str),
-    nth0(Q, Str, r).
              
-        
-       
-        
-    
-     
-     
+%REGUŁY PORUSZANIA SIĘ
+wykonaj_ruch_zielony_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is Y+1,
+        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
+
+wykonaj_ruch_zielony_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is Y+1,
+        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
+ 
+ 
+wykonaj_ruch_zielony_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is Y+1,
+        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
+ 
+ 
+wykonaj_ruch_zielony_gora(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is Y-1,
+        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
+ 
+wykonaj_ruch_zielony_lewo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is X-1,
+        wykonaj_wiele_przemieszczen([[Y, X, x], [Y, N, Z]], B, Bnew).
+ 
+wykonaj_ruch_zielony_prawo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is X+1,
+        wykonaj_wiele_przemieszczen([[Y, X, x], [Y, N, Z]], B, Bnew).
+ 
+wykonaj_ruch_czerwony_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is Y+1,
+    	M is X+1,
+         wykonaj_wiele_przemieszczen([[Y, X, x], [Y, M, x], [N,X,Z],[N,M,Z]], B, Bnew).
+ 
+wykonaj_ruch_czerwony_gora(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is Y-1,
+    	M is X+1,
+         wykonaj_wiele_przemieszczen([[Y, X, x], [Y, M, x], [N,X,Z],[N,M,Z]], B, Bnew).
+ 
+wykonaj_ruch_czerwony_lewo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        N is X-1, 
+    	M is X+1,
+        wykonaj_wiele_przemieszczen([[Y,M,x], [Y,N,Z]], B, Bnew).
+ 
+wykonaj_ruch_czerwony_prawo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is X+2,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[Y,M,Z]], B, Bnew).
+ 
+wykonaj_ruch_zolty_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is Y+2,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[M,X,Z]], B, Bnew).
+ 
+wykonaj_ruch_zolty_gora(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is Y-1,
+    	N is Y+1,
+        wykonaj_wiele_przemieszczen([[M,X,Z],[N,X,x]], B, Bnew).
+ 
+wykonaj_ruch_zolty_prawo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is X+1,
+    	N is Y+1,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[N,X,x],[Y,M,Z],[N,M,Z]],B, Bnew).
+ 
+ 
+wykonaj_ruch_zolty_lewo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is X-1,
+    	N is Y+1,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[N,X,x],[Y,M,Z],[N,M,Z]], B, Bnew).
+ 
+wykonaj_ruch_niebieski_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is X + 1,
+    	N is Y + 2,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[Y,M,x],[N,X,Z],[N,M,Z]], B, Bnew).
+ 
+wykonaj_ruch_niebieski_gora(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is Y + 1,
+    	N is X +1,
+    	Q is Y - 1,
+        wykonaj_wiele_przemieszczen([[M,X,x],[M,N,x],[Q, X, Z], [Q,N, Z]], B, Bnew).
+ 
+wykonaj_ruch_niebieski_prawo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is Y + 1,
+    	N is X + 2,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[M,X,x],[Y,N,Z],[M,N,Z]], B, Bnew).
+ 
+wykonaj_ruch_niebieski_lewo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is X + 1,
+    	N is Y + 1,
+    	Q is X - 1,
+        wykonaj_wiele_przemieszczen([[Y,M,x],[N,M,x],[Y,Q,Z],[N,Q,Z]], B, Bnew).
+ 
+wykonaj_ruch_fioletowy_gora(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is X + 1,
+    	N is Y - 1,
+    	Q is Y + 2,
+        wykonaj_wiele_przemieszczen([[N,X,Z],[N,M,Z],[Q,X,x],[Q,M,x]], B, Bnew).
+ 
+wykonaj_ruch_fioletowy_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is Y + 3,
+    	N is X + 1,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[Y,N,x],[M,X,Z],[M,N,Z]], B, Bnew).
+ 
+wykonaj_ruch_fioletowy_lewo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	N is X + 1,
+    	M is Y + 1,
+    	Q is Y + 2,
+    	W is X - 1,
+        wykonaj_wiele_przemieszczen([[Y,N,x],[M,N,x],[Q,N,x],[Y,W,Z],[M,W,Z],[Q,W,Z]], B, Bnew).
+ 
+wykonaj_ruch_fioletowy_prawo(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+    	M is Y + 1,
+    	N is Y + 2,
+    	Q is X + 2,
+        wykonaj_wiele_przemieszczen([[Y,X,x],[M,X,x],[N,X,x],[Y,Q,Z],[M,Q,Z],[N,Q,Z]], B, Bnew).
+ 
