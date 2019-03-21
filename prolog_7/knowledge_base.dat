@@ -82,42 +82,29 @@
      
      znajdz_rog_przeszkody(R, _, R):-
          rozpakuj_trzy_elementowa_liste(R, _, _, Z).
-         czy_rog(Z),!.
+         czy_rog(Z)!.
      znajdz_rog_przeszkody(R, B, [Yr,Xr, CharNew]) :-
         rozpakuj_trzy_elementowa_liste(R, _, _, C),
         atom_concat(C, 'R', CharNew),
 	    pozycja(B,Yr,Xr,CharNew).
    
-
-   znajdz_rog(B,X,Y, Q, E) :-
-    pozycja(B,X,Y,Char),
-    atom_concat(Char, 'r', Rog),
-	pozycja(B,Q,E,Rog).
-         
     
-%    znajdz_rog_przeszody(R, B, Rprzeszkody):-
-%        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-%        \+czy_jest_rogiem(Z),
-%        string_chars(Z, Str),
-%        append(Str, ['R'], ListRog),
-%        string_chars(Zprzeszkody, ListRog),
-%        pozycja(B, Xn, Yn, Zprzeszkody),
-%        Rprzeszkody is [Yn, Xn, Zprzeszkody].
-        
+
 % Możliwość poruszania się	
 	czy_mozliwy_zielony_dol(R, B, Bnew):-
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        \+ czy_sciana(B, Y+1, X), 
-         czy_wolne(B, Y+1, X),
-         wykonaj_ruch_zielony_dol(R, B, Bnew).
-
-	czy_mozliwy_zielony_dol(R, B, Bnew):-
-        \+ czy_sciana(B, Y, X), 
-        \+ czy_wolne(B, Y, X),
-         znajdz_rog_przeszkody(R, B, Rprzeszkody),
-         przemiesc(Rprzeszkody, B),
-         wykonaj_ruch_zielony_dol(R, B, Bnew).
-
+        Y1 is Y+1,
+        czy_puste(B, Y1, X),
+        wykonaj_ruch_zielony_dol(R, B, Bnew)!.
+      
+    czy_mozliwy_zielony_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        Y1 is Y+1,
+        \+czy_puste(B, Y1, X),
+        pozycja(B, Y1, X, C),
+        znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
+        porusz(Rnew).
+    porusz(X):- 1 = 1.
 
     
 
