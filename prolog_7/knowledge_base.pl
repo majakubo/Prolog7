@@ -1,12 +1,12 @@
 zadanie(ZAD):- ZAD = zadanie1.
 
     plansza([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
-			 [w,  b1R,b1 ,r1R,r1 ,x  ,g1R,y1R,w  ],
-             [w,  b1 ,b1 ,x  ,r2R,r2 ,x  ,y1 ,w  ],
-             [w,  x  ,x  ,x  ,y2R,g2R,x  ,y3R,w  ],
-             [w,  p1R,p1 ,z  ,y2 ,g3R,x  ,y3 ,w  ],
-             [w,  p1 ,p1 ,x  ,x  ,x  ,b2R,b2 ,w  ],
-             [w,  p1 ,p1 ,x  ,r3R,r3 ,b2 ,b2 ,w  ],
+			 [w  ,x  ,x  ,x  ,x  ,x  ,x  ,x  ,w  ],
+             [w  ,x  ,x  ,x  ,x  ,x  ,x  ,x  ,w  ],
+             [w  ,x  ,x  ,x  ,x  ,x  ,x  ,x  ,w  ],
+             [w  ,x  ,x  ,x  ,x  ,x  ,x  ,x  ,w  ],
+             [w  ,x  ,x  ,x  ,x  ,x  ,x  ,x  ,w  ],
+             [w  ,x  ,x  ,x  ,x  ,x  ,x  ,x  ,w  ],
              [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
 % Manipulacja stringiem
      pierwszy_znak(Z, PZ):-
@@ -99,27 +99,39 @@ zadanie(ZAD):- ZAD = zadanie1.
 	    pozycja(B,Yr,Xr,CharNew).
         
 
-%przemieszczanie klocka
+%przemieszczanie klocka dla zadanie1
     przemiesc(R, B, Bnew):-
+        zadanie(zadanie2),
         rozpakuj_trzy_elementowa_liste(R, _, _, Z),
         pierwszy_znak(Z, Kolor),
         czy_mozliwy(R, B, Bnew, d, Kolor),
-        !.
+        !,
+    
+%przemieszczenia dla zadanie2
     przemiesc(R, B, Bnew):-
+        zadanie(zadanie2),
+        rozpakuj_trzy_elementowa_liste(R, _, _, Z),
+        pierwszy_znak(Z, Kolor),
+        czy_mozliwy(R, B, Bnew, d, Kolor),
+        !,
+    przemiesc(R, B, Bnew):-
+        zadanie(zadanie2),
         rozpakuj_trzy_elementowa_liste(R, _, _, Z),
         pierwszy_znak(Z, Kolor),
         czy_mozliwy(R, B, Bnew, l, Kolor),
-        !.
+        !,
     przemiesc(R, B, Bnew):-
+        zadanie(zadanie2),
         rozpakuj_trzy_elementowa_liste(R, _, _, Z),
         pierwszy_znak(Z, Kolor),
         czy_mozliwy(R, B, Bnew, p, Kolor),
-        !.
+        !,
     przemiesc(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        zadanie(zadanie2),
+        rozpakuj_trzy_elementowa_liste(R, _, _, Z),
         pierwszy_znak(Z, Kolor),
         czy_mozliwy(R, B, Bnew, g, Kolor),
-        !.        
+        !,        
 
 
 
