@@ -1,4 +1,5 @@
-zadanie1.
+zadanie(ZAD):- ZAD = zadanie2.
+
     plansza([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 			 [w,  b1R,b1 ,r1R,r1 ,x  ,g1R,y1R,w  ],
              [w,  b1 ,b1 ,x  ,r2R,r2 ,x  ,y1 ,w  ],
@@ -39,11 +40,11 @@ zadanie1.
         pozycja(B, Y, X, x).
     
     czy_sciana(B, Y, X, _):-
-        zadanie2,
+        zadanie(zadanie2),
         pozycja(B, Y, X, w).  
     
     czy_sciana(B, Y, X, Kolor_Klocka):-
-    	 zadanie1,
+    	 zadanie(zadanie1),
          pozycja(B, Y, X, w);
     	 \+pozycja(B, Y, X, Kolor_Klocka).      
     
@@ -94,7 +95,12 @@ zadanie1.
         atom_concat(C, 'R', CharNew),
 	    pozycja(B,Yr,Xr,CharNew).
    
-    
+%przemieść_kolor
+    przemiesc_zielony(R, B, Bnew, Kierunek):-
+        Kierunek = g,
+        czy_mozliwy_gora_zielony(R, B, Bnew).
+    przemiesc_zielony(R, B, Bnew, Kierunek)
+        
 
 % Możliwość poruszania się	
 	porusz(X):- 1 = 1.
@@ -154,7 +160,7 @@ zadanie1.
       
     czy_mozliwy_zielony_prawo(R, B, Bnew):-
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        X1 is X_1,
+        X1 is X+1,
         \+ czy_puste(B, Y, X1),
         \+ czy_sciana(B, Y1, X, Z),
         pozycja(B, Y, X1, C),
