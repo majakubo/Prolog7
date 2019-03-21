@@ -108,7 +108,7 @@ zadanie1.
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         Y1 is Y+1,
         \+ czy_puste(B, Y1, X),
-        \+ czy_sciana(B, Y1, Z),
+        \+ czy_sciana(B, Y1, X, Z),
         pozycja(B, Y1, X, C),
         znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
         porusz(Rnew),
@@ -121,17 +121,17 @@ zadanie1.
         wykonaj_ruch_zielony_gora(R, B, Bnew),!.
       
     czy_mozliwy_zielony_gora(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         Y1 is Y-1,
         \+ czy_puste(B, Y1, X),
-        \+ czy_sciana(B, Y1, X),
+        \+ czy_sciana(B, Y1, X, Z),
         pozycja(B, Y1, X, C),
         znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
         porusz(Rnew),
         wykonaj_ruch_zielony_gora(R, B, Bnew),!.
      
     czy_mozliwy_zielony_lewo(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         X1 is X-1,
         czy_puste(B, Y, X1),
         wykonaj_ruch_zielony_dol(R, B, Bnew),!.
@@ -153,10 +153,10 @@ zadanie1.
         wykonaj_ruch_zielony_dol(R, B, Bnew),!.
       
     czy_mozliwy_zielony_prawo(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         X1 is X_1,
         \+ czy_puste(B, Y, X1),
-        \+ czy_sciana(B, Y1, X),
+        \+ czy_sciana(B, Y1, X, Z),
         pozycja(B, Y, X1, C),
         znajdz_rog_przeszkody([Y, X1, C], B, Rnew),
         porusz(Rnew),
