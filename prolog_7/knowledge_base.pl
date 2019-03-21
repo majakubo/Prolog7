@@ -94,39 +94,45 @@ zadanie(ZAD):- ZAD = zadanie2.
         rozpakuj_trzy_elementowa_liste(R, _, _, C),
         atom_concat(C, 'R', CharNew),
 	    pozycja(B,Yr,Xr,CharNew).
-   
-%przemieść_kolor
-    przemiesc_zielony(R, B, Bnew, Kierunek):-
-        Kierunek = g,
-        czy_mozliwy_gora_zielony(R, B, Bnew).
-    przemiesc_zielony(R, B, Bnew, Kierunek)
         
 
 % Możliwość poruszania się	
 	porusz(X):- 1 = 1.
-    czy_mozliwy_zielony_dol(R, B, Bnew):-
+    %zielony dol 
+    czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = d,
+        Kolor = z,
         rozpakuj_trzy_elementowa_liste(R, Y, X, _),
         Y1 is Y+1,
         czy_puste(B, Y1, X),
-        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
-      
-    czy_mozliwy_zielony_dol(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        Y1 is Y+1,
-        \+ czy_puste(B, Y1, X),
-        \+ czy_sciana(B, Y1, X, Z),
-        pozycja(B, Y1, X, C),
-        znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
-        porusz(Rnew),
-        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
     
-    czy_mozliwy_zielony_gora(R, B, Bnew):-
+    %zielony dol  
+    czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = d,
+        Kolor = z,
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        Y1 is Y+1,
+        \+ czy_puste(B, Y1, X),
+        \+ czy_sciana(B, Y1, X, Z),
+        pozycja(B, Y1, X, C),
+        znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
+        porusz(Rnew),
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+    
+    %zielony gora 
+    czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = g,
+        Kolor = z,
         rozpakuj_trzy_elementowa_liste(R, Y, X, _),
         Y1 is Y-1,
         czy_puste(B, Y1, X),
-        wykonaj_ruch_zielony_gora(R, B, Bnew),!.
-      
-    czy_mozliwy_zielony_gora(R, B, Bnew):-
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+    
+    %zielony gora  
+    czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = g,
+        Kolor = z,
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         Y1 is Y-1,
         \+ czy_puste(B, Y1, X),
@@ -134,15 +140,21 @@ zadanie(ZAD):- ZAD = zadanie2.
         pozycja(B, Y1, X, C),
         znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
         porusz(Rnew),
-        wykonaj_ruch_zielony_gora(R, B, Bnew),!.
-     
-    czy_mozliwy_zielony_lewo(R, B, Bnew):-
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+    
+    %zielony lewo  
+    czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = l,
+        Kolor = z,
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         X1 is X-1,
         czy_puste(B, Y, X1),
-        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
-      
-    czy_mozliwy_zielony_lewo(R, B, Bnew):-
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+    
+    %zielony lewo   
+    czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = l,
+        Kolor = z,
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         X1 is X-1,
         \+ czy_puste(B, Y, X1),
@@ -150,15 +162,21 @@ zadanie(ZAD):- ZAD = zadanie2.
         pozycja(B, Y, X1, C),
         znajdz_rog_przeszkody([Y, X1, C], B, Rnew),
         porusz(Rnew),
-        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
 	
-	czy_mozliwy_zielony_prawo(R, B, Bnew):-
+    %zielony prawo
+	czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = p,
+        Kolor = z,
         rozpakuj_trzy_elementowa_liste(R, Y, X, _),
         X1 is X+1,
         czy_puste(B, Y, X1),
-        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
-      
-    czy_mozliwy_zielony_prawo(R, B, Bnew):-
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
+    
+    %zielony prawo  
+    czy_mozliwy(R, B, Bnew, Kierunek, Kolor):-
+        Kierunek = p,
+        Kolor = z,
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         X1 is X+1,
         \+ czy_puste(B, Y, X1),
@@ -166,7 +184,7 @@ zadanie(ZAD):- ZAD = zadanie2.
         pozycja(B, Y, X1, C),
         znajdz_rog_przeszkody([Y, X1, C], B, Rnew),
         porusz(Rnew),
-        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
+        wykonaj_ruch(R, B, Bnew, Kierunek, Kolor),!.
 	
 	
 	
@@ -176,133 +194,165 @@ zadanie(ZAD):- ZAD = zadanie2.
 
              
 %REGUŁY PORUSZANIA SIĘ
-wykonaj_ruch_zielony_dol(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        N is Y+1,
-        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
-
-wykonaj_ruch_zielony_dol(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-        N is Y+1,
-        wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
- 
- 
-wykonaj_ruch_zielony_dol(R, B, Bnew):-
+%zielony dol 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = d,
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         N is Y+1,
         wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
  
- 
-wykonaj_ruch_zielony_gora(R, B, Bnew):-
+%zielony gora 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = g,
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         N is Y-1,
         wykonaj_wiele_przemieszczen([[Y, X, x], [N, X, Z]], B, Bnew).
- 
-wykonaj_ruch_zielony_lewo(R, B, Bnew):-
+%zielony lewo
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = l,
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         N is X-1,
         wykonaj_wiele_przemieszczen([[Y, X, x], [Y, N, Z]], B, Bnew).
- 
-wykonaj_ruch_zielony_prawo(R, B, Bnew):-
+% zielony prawo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = p,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         N is X+1,
         wykonaj_wiele_przemieszczen([[Y, X, x], [Y, N, Z]], B, Bnew).
- 
-wykonaj_ruch_czerwony_dol(R, B, Bnew):-
+%czerowny dol 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = c,
+        Kierunek = d,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         N is Y+1,
     	M is X+1,
          wykonaj_wiele_przemieszczen([[Y, X, x], [Y, M, x], [N,X,Z],[N,M,Z]], B, Bnew).
- 
-wykonaj_ruch_czerwony_gora(R, B, Bnew):-
+%czerwony gora 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = c,
+        Kierunek = g,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         N is Y-1,
     	M is X+1,
          wykonaj_wiele_przemieszczen([[Y, X, x], [Y, M, x], [N,X,Z],[N,M,Z]], B, Bnew).
- 
-wykonaj_ruch_czerwony_lewo(R, B, Bnew):-
+%czerwony lewo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = c,
+        Kierunek = l,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         N is X-1, 
     	M is X+1,
         wykonaj_wiele_przemieszczen([[Y,M,x], [Y,N,Z]], B, Bnew).
- 
-wykonaj_ruch_czerwony_prawo(R, B, Bnew):-
+%czerwony prawo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = c,
+        Kierunek = p,        
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is X+2,
         wykonaj_wiele_przemieszczen([[Y,X,x],[Y,M,Z]], B, Bnew).
- 
-wykonaj_ruch_zolty_dol(R, B, Bnew):-
+%zolty dol 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = d,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is Y+2,
         wykonaj_wiele_przemieszczen([[Y,X,x],[M,X,Z]], B, Bnew).
- 
-wykonaj_ruch_zolty_gora(R, B, Bnew):-
+%zolty gora 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = g,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is Y-1,
     	N is Y+1,
         wykonaj_wiele_przemieszczen([[M,X,Z],[N,X,x]], B, Bnew).
- 
-wykonaj_ruch_zolty_prawo(R, B, Bnew):-
+%zolty prawo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = p,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is X+1,
     	N is Y+1,
         wykonaj_wiele_przemieszczen([[Y,X,x],[N,X,x],[Y,M,Z],[N,M,Z]],B, Bnew).
  
- 
-wykonaj_ruch_zolty_lewo(R, B, Bnew):-
+%zolty lewo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = z,
+        Kierunek = l,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is X-1,
     	N is Y+1,
         wykonaj_wiele_przemieszczen([[Y,X,x],[N,X,x],[Y,M,Z],[N,M,Z]], B, Bnew).
- 
-wykonaj_ruch_niebieski_dol(R, B, Bnew):-
+%niebieski dol 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = n,
+        Kierunek = d,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is X + 1,
     	N is Y + 2,
         wykonaj_wiele_przemieszczen([[Y,X,x],[Y,M,x],[N,X,Z],[N,M,Z]], B, Bnew).
- 
-wykonaj_ruch_niebieski_gora(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+%niebieski gora 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+     Kolor = n,
+        Kierunek = g,    
+       rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is Y + 1,
     	N is X +1,
     	Q is Y - 1,
         wykonaj_wiele_przemieszczen([[M,X,x],[M,N,x],[Q, X, Z], [Q,N, Z]], B, Bnew).
- 
-wykonaj_ruch_niebieski_prawo(R, B, Bnew):-
+%niebieski prawo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = n,
+        Kierunek = p,        
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is Y + 1,
     	N is X + 2,
         wykonaj_wiele_przemieszczen([[Y,X,x],[M,X,x],[Y,N,Z],[M,N,Z]], B, Bnew).
- 
-wykonaj_ruch_niebieski_lewo(R, B, Bnew):-
+%niebieski lewo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = n,
+        Kierunek = l,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is X + 1,
     	N is Y + 1,
     	Q is X - 1,
         wykonaj_wiele_przemieszczen([[Y,M,x],[N,M,x],[Y,Q,Z],[N,Q,Z]], B, Bnew).
- 
-wykonaj_ruch_fioletowy_gora(R, B, Bnew):-
+%fioletowy gora 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = f,
+        Kierunek = g,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is X + 1,
     	N is Y - 1,
     	Q is Y + 2,
         wykonaj_wiele_przemieszczen([[N,X,Z],[N,M,Z],[Q,X,x],[Q,M,x]], B, Bnew).
- 
-wykonaj_ruch_fioletowy_dol(R, B, Bnew):-
+%fioletowy dol 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = f,
+        Kierunek = d,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is Y + 3,
     	N is X + 1,
         wykonaj_wiele_przemieszczen([[Y,X,x],[Y,N,x],[M,X,Z],[M,N,Z]], B, Bnew).
- 
-wykonaj_ruch_fioletowy_lewo(R, B, Bnew):-
+
+%%fioletowy lewo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = f,
+        Kierunek = l,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	N is X + 1,
     	M is Y + 1,
     	Q is Y + 2,
     	W is X - 1,
         wykonaj_wiele_przemieszczen([[Y,N,x],[M,N,x],[Q,N,x],[Y,W,Z],[M,W,Z],[Q,W,Z]], B, Bnew).
- 
-wykonaj_ruch_fioletowy_prawo(R, B, Bnew):-
+
+%%fioletowy prawo 
+wykonaj_ruch(R, B, Bnew, Kierunek, Kolor):-
+        Kolor = f,
+        Kierunek = p,    
         rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
     	M is Y + 1,
     	N is Y + 2,
