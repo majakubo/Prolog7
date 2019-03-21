@@ -2,7 +2,7 @@
 			 [w,  b1R,b1 ,r1R,r1 ,x  ,g1R,y1R,w  ],
              [w,  b1 ,b1 ,x  ,r2R,r2 ,x  ,y1 ,w  ],
              [w,  x  ,x  ,x  ,y2R,g2R,x  ,y3R,w  ],
-             [w,  p1r,p1 ,x  ,y2 ,g3R,x  ,y3 ,w  ],
+             [w,  p1R,p1 ,x  ,y2 ,g3R,x  ,y3 ,w  ],
              [w,  p1 ,p1 ,x  ,x  ,x  ,b2R,b2 ,w  ],
              [w,  p1 ,p1 ,x  ,r3R,r3 ,b2 ,b2 ,w  ],
              [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
@@ -31,7 +31,7 @@
 
     czy_jest_rogiem(Z):-
         string_chars(Z, Str),
-        nth0(_, Str, r).
+        nth0(_, Str, R).
 
 %SPRAWDZANIE OBIEKTU NA POLU X Y    
     %%czy_puste(B,[[X,Y]|[]]).
@@ -80,13 +80,21 @@
     
 % ZNAJDYWANIE ROGU
      
-     znajdz_rog_przeszkody(R, _, R):-
-         rozpakuj_trzy_elementowa_liste(R, _, _, Z).
-         czy_rog(Z)!.
+    znajdz_rog_przeszkody(R, _, R):-
+         rozpakuj_trzy_elementowa_liste(R, _, _, Z),
+         czy_jest_rogiem(Z),!.
      znajdz_rog_przeszkody(R, B, [Yr,Xr, CharNew]) :-
         rozpakuj_trzy_elementowa_liste(R, _, _, C),
         atom_concat(C, 'R', CharNew),
 	    pozycja(B,Yr,Xr,CharNew).
+   
+
+   znajdz_rog(B,X,Y, Q, E) :-
+    pozycja(B,X,Y,Char),
+    atom_concat(Char, 'R', Rog),
+	pozycja(B,Q,E,Rog).
+	    
+	    
    
     
 
