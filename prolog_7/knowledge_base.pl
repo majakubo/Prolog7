@@ -2,7 +2,7 @@
 			 [w,  b1R,b1 ,r1R,r1 ,x  ,g1R,y1R,w  ],
              [w,  b1 ,b1 ,x  ,r2R,r2 ,x  ,y1 ,w  ],
              [w,  x  ,x  ,x  ,y2R,g2R,x  ,y3R,w  ],
-             [w,  p1r,p1 ,x  ,y2 ,g3R,x  ,y3 ,w  ],
+             [w,  p1R,p1 ,z  ,y2 ,g3R,x  ,y3 ,w  ],
              [w,  p1 ,p1 ,x  ,x  ,x  ,b2R,b2 ,w  ],
              [w,  p1 ,p1 ,x  ,r3R,r3 ,b2 ,b2 ,w  ],
              [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
@@ -27,7 +27,6 @@
     green(C):-
         string_chars(C, [H|_]),
         H = g.
-    
 
     czy_jest_rogiem(Z):-
         string_chars(Z, Str),
@@ -69,7 +68,7 @@
         wykonaj_wiele_przemieszczen(T, Btemp, Bnew).
 	
 % ROZPAKOWYWANIE LISTY
-	  rozpakuj_jedno_elementowa_liste([H|_], H).
+	rozpakuj_jedno_elementowa_liste([H|_], H).
 	
     rozpakuj_dwu_elementowa_liste([H|T], H, B):-
         rozpakuj_jedno_elementowa_liste(T, B).
@@ -91,21 +90,37 @@
     
 
 % Możliwość poruszania się	
-	czy_mozliwy_zielony_dol(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+	porusz(X):- 1 = 1.
+    czy_mozliwy_zielony_dol(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
         Y1 is Y+1,
         czy_puste(B, Y1, X),
-        wykonaj_ruch_zielony_dol(R, B, Bnew)!.
+        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
       
     czy_mozliwy_zielony_dol(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
+        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
         Y1 is Y+1,
         \+czy_puste(B, Y1, X),
         pozycja(B, Y1, X, C),
         znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
-        porusz(Rnew).
-    porusz(X):- 1 = 1.
-
+        porusz(Rnew),
+        wykonaj_ruch_zielony_dol(R, B, Bnew),!.
+    
+    czy_mozliwy_zielony_gora(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
+        Y1 is Y-1,
+        czy_puste(B, Y1, X),
+        wykonaj_ruch_zielony_gora(R, B, Bnew),!.
+      
+    czy_mozliwy_zielony_gora(R, B, Bnew):-
+        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
+        Y1 is Y-1,
+        \+czy_puste(B, Y1, X),
+        pozycja(B, Y1, X, C),
+        znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
+        porusz(Rnew),
+        wykonaj_ruch_zielony_gora(R, B, Bnew),!.
+	
     
 
 
