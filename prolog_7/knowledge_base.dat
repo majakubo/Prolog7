@@ -44,9 +44,10 @@
     pozycja(B, Y, X, Char) :-
         nth0(Y, B, Column), 
         nth0(X, Column, Char).
-
+    
 
 % REGUŁY MODYFIKOWANIA PLANSZY
+   
     podmien_w_liscie(Index, Elem, [_|T], [Elem|T]) :-
         Index = 0, !. 
     podmien_w_liscie(Index, Elem, [H|T], [H|Out]) :-
@@ -68,7 +69,7 @@
         wykonaj_wiele_przemieszczen(T, Btemp, Bnew).
 	
 % ROZPAKOWYWANIE LISTY
-    rozpakuj_jedno_elementowa_liste([H|_], H).
+	  rozpakuj_jedno_elementowa_liste([H|_], H).
 	
     rozpakuj_dwu_elementowa_liste([H|T], H, B):-
         rozpakuj_jedno_elementowa_liste(T, B).
@@ -78,10 +79,21 @@
 
     
 % ZNAJDYWANIE ROGU
-%	znajdz_rog_przeszkody(R, B, Rprzeszkody):-
-%        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
-%        czy_jest_rogiem(Z),
-%        Rprzeszody is [Y, X, Z].
+     
+     znajdz_rog_przeszkody(R, _, R):-
+         rozpakuj_trzy_elementowa_liste(R, _, _, Z).
+         czy_rog(Z),!.
+     znajdz_rog_przeszkody(R, B, [Yr,Xr, CharNew]) :-
+        rozpakuj_trzy_elementowa_liste(R, _, _, C),
+        atom_concat(C, 'R', CharNew),
+	    pozycja(B,Yr,Xr,CharNew).
+   
+
+   znajdz_rog(B,X,Y, Q, E) :-
+    pozycja(B,X,Y,Char),
+    atom_concat(Char, 'r', Rog),
+	pozycja(B,Q,E,Rog).
+         
     
 %    znajdz_rog_przeszody(R, B, Rprzeszkody):-
 %        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
