@@ -1,3 +1,4 @@
+zadanie1.
     plansza([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 			 [w,  b1R,b1 ,r1R,r1 ,x  ,g1R,y1R,w  ],
              [w,  b1 ,b1 ,x  ,r2R,r2 ,x  ,y1 ,w  ],
@@ -37,8 +38,14 @@
     czy_puste(B, Y, X) :-
         pozycja(B, Y, X, x).
     
-    czy_sciana(B, Y, X):-
-        pozycja(B, Y, X, w).        
+    czy_sciana(B, Y, X, _):-
+        zadanie2,
+        pozycja(B, Y, X, w).  
+    
+    czy_sciana(B, Y, X, Kolor_Klocka):-
+    	 zadanie1,
+         pozycja(B, Y, X, w);
+    	 \+pozycja(B, Y, X, Kolor_Klocka).      
     
     pozycja(B, Y, X, Char) :-
         nth0(Y, B, Column), 
@@ -98,10 +105,10 @@
         wykonaj_ruch_zielony_dol(R, B, Bnew),!.
       
     czy_mozliwy_zielony_dol(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         Y1 is Y+1,
         \+ czy_puste(B, Y1, X),
-        \+ czy_sciana(B, Y1, X),
+        \+ czy_sciana(B, Y1, Z),
         pozycja(B, Y1, X, C),
         znajdz_rog_przeszkody([Y1, X, C], B, Rnew),
         porusz(Rnew),
@@ -130,10 +137,10 @@
         wykonaj_ruch_zielony_dol(R, B, Bnew),!.
       
     czy_mozliwy_zielony_lewo(R, B, Bnew):-
-        rozpakuj_trzy_elementowa_liste(R, Y, X, _),
+        rozpakuj_trzy_elementowa_liste(R, Y, X, Z),
         X1 is X-1,
         \+ czy_puste(B, Y, X1),
-        \+ czy_sciana(B, Y, X1),
+        \+ czy_sciana_klocek(B, Y, X1, Z),
         pozycja(B, Y, X1, C),
         znajdz_rog_przeszkody([Y, X1, C], B, Rnew),
         porusz(Rnew),
