@@ -32,7 +32,7 @@ board([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 	loop_through_sequence([H|T]):-
         loop_through_sequence(T).
     
-	find_all_objects_unwrap([], ObjectsTemp, ObjectsTemp, Character).
+	find_all_objects_unwrap([], ObjectsTemp, ObjectsTemp, _).
     
     find_all_objects_unwrap([H|T], ObjectsTemp, Objects, Character):-
         n_character(_, H, Character),
@@ -40,18 +40,26 @@ board([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
     	find_all_objects_unwrap(T, ObjectsTemp1, Objects, Character),!.
     
 
-    find_all_objects_unwrap([H|T], ObjectsTemp, Objects, Character):-
+    find_all_objects_unwrap([_|T], ObjectsTemp, Objects, Character):-
 		find_all_objects_unwrap(T, ObjectsTemp, Objects, Character), !.
     
 
     find_all_objects(Board, Objects, Character):-
         append(Board, L),
     	find_all_objects_unwrap(L, [], Objects, Character).
-		
-
-	find_all_cords_of_block(Board, BlockCorner):-
-        append(Board, L),
-        find
+	
+   find_all_cords_of_block_unwrap(_, [], ListOfCords, ListOfCords).	
+	
+    find_all_cords_of_block_unwrap(Board, [H|T], ListOfCordsTemp, ListOfCords):-
+         position(Board, Y, X, H),
+         insert_into_two_dimensional_array(Y, X, 'T', Board, NewBoard),
+    	 add_element(ListOfCordsTemp, [Y, X], ListOfCordsTemp1),
+         find_all_cords_of_block_unwrap(NewBoard, T, ListOfCordsTemp1, ListOfCords), !.
+    
+	find_all_cords_of_block(Board, BlockCorner, ListOfCords):-
+        n_character(0, BlockCorner, ID),
+        find_all_objects(Board, Objects, ID),
+        find_all_cords_of_block_unwrap(Board, Objects, [], ListOfCords).
 
     change_in_list(Index, Elem, [_|T], [Elem|T]):-
         Index = 0,
