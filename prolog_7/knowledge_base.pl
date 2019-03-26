@@ -1,10 +1,10 @@
 % data structure representing board
-board([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
+board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         [w  ,aR ,a  ,cR ,c  ,x  ,iR ,jR ,w  ],
-       [w  ,a  ,a  ,x  ,dR ,d  ,x  ,j  ,w  ],
+        [w  ,a  ,a  ,x  ,dR ,d  ,x  ,j  ,w  ],
         [w  ,x  ,x  ,x  ,eR ,fR ,x  ,kR ,w  ],
         [w  ,bR ,b  ,x  ,e  ,gR ,x  ,k  ,w  ],
-       [w  ,b  ,b  ,x  ,x  ,x  ,lR ,l  ,w  ],
+        [w  ,b  ,b  ,x  ,x  ,x  ,lR ,l  ,w  ],
         [w  ,b  ,b  ,x  ,hR ,h  ,l  ,l  ,w  ],
         [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
 
@@ -38,7 +38,7 @@ board([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 
 %------------------
 	loop_through_sequence([]).
-	loop_through_sequence([H|T]):-
+	loop_through_sequence([_|T]):-
         loop_through_sequence(T).
 %------------------
 
@@ -59,7 +59,7 @@ board([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
     	find_all_objects_unwrap(L, [], Objects, Character).
 %------------------	
 
-
+ 
 
 %------------------
     find_all_cords_of_block_unwrap(_, [], ListOfCords, ListOfCords).	
@@ -75,21 +75,75 @@ board([[w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         find_all_objects(Board, Objects, ID),
         find_all_cords_of_block_unwrap(Board, Objects, [], ListOfCords).
 %------------------
-    move_block(Board, BlockCorner, Direction):-
-        Direction = 'up'.
+    % TO DO
+     %Y, X, Object, Board, NewBoard
+    clear_T_from_board(Board, NewBoard):-
+        position(Board, Y, X, 'T'),
+        insert_into_two_dimensional_array(Y, X, x, Board, Board1),
+    	clear_T_from_board(Board1, NewBoard), !.
+    clear_T_from_board(Board, Board):- !.
 
-	move_block(Board, BlockCorner, Direction):-
-        Direction = 'down'.
+    move_block_unwrap(Board, Board, [], _, _).
+	move_block_unwrap(Board, NewBoard, [H|T], Ydiff, Xdiff):-
+        unpack_two_element_list(H, Y, X),
+    	Y1 is Y + Ydiff,
+        X1 is X + Xdiff,
+        position(Board, Y, X, Character),
+        insert_into_two_dimensional_array(Y, X, 'T', Board, Board1),
+    	insert_into_two_dimensional_array(Y1, X1, Character, Board1, Board2),
+        move_block_unwrap(Board2, NewBoard, T, Ydiff, Xdiff).
 
-	move_block(Board, BlockCorner, Direction):-
-        Direction = 'left'.
+	move_block(Board, NewBoard, BlockCorner, Ydiff, Xdiff):-
+        find_all_cords_of_block(Board, BlockCorner, ListOfCords),
+    	move_block_unwrap(Board, Board1, ListOfCords, Xdiff, Ydiff),
+        clear_T_from_board(Board1, NewBoard).
+    	    
+        
 
-	move_block(Board, BlockCorner, Direction):-
-        Direction = 'right'.
+	move_block(Board, NewBoard, BlockCorner, Direction):-
+        xydiff(Direction, Ydiff, Xdiff),
+        move_block(Board, NewBoard, BlockCorner, Xdiff, Ydiff).
+	
+%------------------
+    can_single_cell_move(Board, Y, X, Ydiff, Xdiff):-
+        position(Board, Y, X, BlockCharacter),
+        n_character(0, BlockCharacter, FirstBlockCharacter),
+        Y1 is Y + Ydiff,
+        X1 is X + Xdiff,
+        position(Board, Y1, X1, CellCharacter),
+        n_character(0, CellCharacter, FirstCellCharacter),
+        (FirstCellCharacter = FirstBlockCharacter ; FirstCellCharacter = 'x').
+	
 
+	can_every_cell_move(_, [], _, _).
+	can_every_cell_move(Board, [H|T], Xdiff, Ydiff):-
+        unpack_two_element_list(H, Y, X),
+        can_single_cell_move(Board, Y, X, Xdiff, Ydiff), 
+        can_every_cell_move(Board, T, Xdiff, Ydiff).
+              
+    can_block_move(Board, BlockCorner, Direction):-
+        xydiff(Direction, Ydiff, Xdiff),
+        find_all_cords_of_block(Board, BlockCorner, ListOfCords),
+        can_every_cell_move(Board, ListOfCords, Ydiff, Xdiff).
 
-
-
+        
+	xydiff(D, Y, X):-
+        D = 'left',
+        Y is 0,
+        X is -1.
+	xydiff(D, Y, X):-
+        D = 'right',
+        Y is 0,
+        X is 1.
+	xydiff(D, Y, X):-
+        D = 'up',
+        Y is -1,
+        X is 0.	
+	xydiff(D, Y, X):-
+        D = 'down',
+        Y is 1,
+        X is 0.
+	
 %------------------
     change_in_list(Index, Elem, [_|T], [Elem|T]):-
         Index = 0,
