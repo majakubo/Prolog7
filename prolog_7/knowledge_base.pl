@@ -2,7 +2,7 @@
 board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         [w  ,a  ,a  ,c  ,c  ,x  ,i  ,j  ,w  ],
         [w  ,a  ,a  ,x  ,d  ,d  ,x  ,j  ,w  ],
-        [w  ,x  ,x  ,x  ,e  ,f  ,x  ,k ,w  ],
+        [w  ,x  ,x  ,x  ,e  ,f  ,x  ,k  ,w  ],
         [w  ,b  ,b  ,x  ,e  ,g  ,x  ,k  ,w  ],
         [w  ,b  ,b  ,x  ,x  ,x  ,l  ,l  ,w  ],
         [w  ,b  ,b  ,x  ,h  ,h  ,l  ,l  ,w  ],
@@ -192,6 +192,3 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 	unpack_three_element_list([H|T], H, B, C):-
         unpack_two_element_list(T, B, C).
 %------------------
-	
-	
-        
