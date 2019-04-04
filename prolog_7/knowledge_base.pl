@@ -121,6 +121,7 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 %
 	one_step(Board, NewBoard):-
        block(BlockCharacter),
+       position(Board, _, _, BlockCharacter),
        direction(Dir),
        move_block(Board, BlockCharacter, Dir, NewBoard).
         
