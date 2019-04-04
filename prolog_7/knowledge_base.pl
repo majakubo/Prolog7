@@ -2,7 +2,7 @@
 board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         [w  ,a  ,a  ,c  ,c  ,x  ,i  ,j  ,w  ],
         [w  ,a  ,a  ,x  ,d  ,d  ,x  ,j  ,w  ],
-        [w  ,x  ,x  ,x  ,e  ,f  ,x  ,k  ,w  ],
+        [w  ,x  ,x  ,x  ,e  ,f  ,x  ,k ,w  ],
         [w  ,b  ,b  ,x  ,e  ,g  ,x  ,k  ,w  ],
         [w  ,b  ,b  ,x  ,x  ,x  ,l  ,l  ,w  ],
         [w  ,b  ,b  ,x  ,h  ,h  ,l  ,l  ,w  ],
@@ -20,6 +20,26 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         nth0(X, Column, Character).
 %------------------
 
+	block(a).
+	block(b).
+	block(c).
+	block(d).
+	block(e).
+	block(f).
+	block(g).
+	block(h).
+	block(i).
+	block(j).
+	block(k).
+	block(l).
+	block(m).
+	block(n).
+	block(o).
+	block(p).
+	direction(up).
+	direction(down).
+	direction(left).
+	direction(right).
 
 %------------------
 	is_position_free(Board, Y, X):-
@@ -31,6 +51,7 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         position(Board, Y, X, 'w').
 %------------------
 
+	
 %------------------
     add_element(List, Element, [Element|List]).
 %------------------
@@ -97,10 +118,15 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
     	xydiff(Direction, Ydiff, Xdiff),
         move_cordinates(ListOfCords, [], NewListOfCords, Ydiff, Xdiff).
 %------------------
-
-
+%
+	one_step(Board, NewBoard):-
+       block(BlockCharacter),
+       direction(Dir),
+       move_block(Board, BlockCharacter, Dir, NewBoard).
+        
 %------------------    
-	move_block(Board, NewBoard, BlockCharacter, Direction):-
+	move_block(Board, BlockCharacter, Direction, NewBoard):-
+        can_block_move(Board, BlockCharacter, Direction),
         find_all_cords_of_block(Board, BlockCharacter, ListOfCords),
     	replace_cords_with_character(Board, Board1, ListOfCords, x),
         get_new_cords(ListOfCords, ListOfCords1, Direction),
@@ -192,3 +218,5 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 	unpack_three_element_list([H|T], H, B, C):-
         unpack_two_element_list(T, B, C).
 %------------------
+	
+
