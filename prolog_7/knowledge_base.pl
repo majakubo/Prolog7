@@ -1,13 +1,18 @@
 % data structure representing board
-board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
-        [w  ,a  ,a  ,c  ,c  ,x  ,i  ,j  ,w  ],
-        [w  ,a  ,a  ,x  ,d  ,d  ,x  ,j  ,w  ],
-        [w  ,x  ,x  ,x  ,e  ,f  ,x  ,k ,w  ],
-        [w  ,b  ,b  ,x  ,e  ,g  ,x  ,k  ,w  ],
-        [w  ,b  ,b  ,x  ,x  ,x  ,l  ,l  ,w  ],
-        [w  ,b  ,b  ,x  ,h  ,h  ,l  ,l  ,w  ],
-        [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
+%board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
+%        [w  ,a  ,a  ,c  ,c  ,d  ,d  ,j  ,w  ],
+%        [w  ,a  ,a  ,c  ,c  ,d  ,d  ,j  ,w  ],
+%        [w  ,e  ,e  ,f  ,f  ,f  ,i  ,k ,w  ],
+%        [w  ,b  ,b  ,f  ,f  ,g  ,i  ,k  ,w  ],
+%        [w  ,b  ,b  ,h  ,h  ,h  ,l  ,l  ,w  ],
+%        [w  ,b  ,b  ,x  ,x  ,x  ,l  ,l  ,w  ],
+%        [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
 
+
+board([[w, w, w, w],
+       [w, a, x, w],
+       [w, x, x, w],
+       [w, w, w, w]]).
 
 
 % String manipulation
@@ -33,11 +38,11 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
     block(a).
 
 	
-%	block(g).
-%	block(h).
-%	block(i).
-%	block(j).
-%	block(l).
+ 	block(g).
+	block(h).
+	block(i).
+	block(j).
+	block(l).
 %	block(m).
 %	block(n).
 %	block(o).
@@ -148,7 +153,7 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 	make_move(Board, Board):-
         find_corner(Board, Y, X, a),
         Y is 1,
-        X is 6, 
+        X is 2, 
     	!.
 	make_move(Board, NewBoard):-
         one_step(Board, BoardT),
