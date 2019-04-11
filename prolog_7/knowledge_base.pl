@@ -36,20 +36,20 @@ board([[w, w, w, w, w, w],
 	block(d).
 	block(e).
 	block(f).
-	block(g).
-	block(h).
-	block(i).
-	block(j).
-	block(k).
-	block(l).
-	block(m).
-	block(n).
-	block(o).
-	block(p).
+%	block(g).
+%	block(h).
+%	block(i).
+%	block(j).
+%	block(l).
+%	block(m).
+%	block(n).
+%	block(o).
+%	block(p).
 	direction(down).
 	direction(left).
-	direction(up).
 	direction(right).
+	direction(up).
+	
 	
 	
 
@@ -128,22 +128,20 @@ board([[w, w, w, w, w, w],
     	xydiff(Direction, Ydiff, Xdiff),
         move_cordinates(ListOfCords, [], NewListOfCords, Ydiff, Xdiff).
 %------------------
+	one_step(Board, NewBoard):-
+       move_block(Board, a, right, NewBoard), !.
 
 	one_step(Board, NewBoard):-
        block(BlockCharacter),
-       position(Board, _, _, BlockCharacter),
        direction(Dir),
        move_block(Board, BlockCharacter, Dir, NewBoard).
+
+	
+        
     
 %------------------
 	%Perfect move
-	move_block(Board, BlockCharacter, Direction, NewBoard):-
-        can_block_move(Board, a, right),
-        find_all_cords_of_block(Board, a, ListOfCords),
-    	replace_cords_with_character(Board, Board1, ListOfCords, x),
-        get_new_cords(ListOfCords, ListOfCords1, right),
-        replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter),!.
-	
+
 	move_block(Board, BlockCharacter, Direction, NewBoard):-
         can_block_move(Board, BlockCharacter, Direction),
         find_all_cords_of_block(Board, BlockCharacter, ListOfCords),
@@ -151,13 +149,16 @@ board([[w, w, w, w, w, w],
         get_new_cords(ListOfCords, ListOfCords1, Direction),
         replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter).
 %------------------
-	uloz(Board, _):-
+	make_move(Board, Board):-
         find_corner(Board, Y, X, a),
         Y is 1,
-        X is 4.
-	uloz(Board, NewBoard):-
+        X is 4, 
+    	!.
+	make_move(Board, NewBoard):-
         one_step(Board, BoardT),
-    	uloz(BoardT, NewBoard).
+    	make_move(BoardT, NewBoard).
+
+	
 
 %------------------
     can_single_cell_move(Board, Y, X, Ydiff, Xdiff):-
