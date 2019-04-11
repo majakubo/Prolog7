@@ -9,10 +9,10 @@
 %        [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
 
 
-board([[w, w, w, w],
-       [w, a, b, w],
-       [w, x, c, w],
-       [w, w, w, w]]).
+board([[w, w, w, w, w],
+       [w, a, b, c, w],
+       [w, x, e, d, w],
+       [w, w, w, w, w]]).
 
 
 % String manipulation
@@ -32,9 +32,9 @@ board([[w, w, w, w],
 	
 	block(b).
 	block(c).
+	block(d).
+	block(e).
     block(a).
-%	block(d).
-%	block(e).
 %	block(f).
 %    block(a).
 
@@ -151,17 +151,18 @@ board([[w, w, w, w],
         get_new_cords(ListOfCords, ListOfCords1, Direction),
         replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter).
 %------------------
-	make_move(Board, Board, Depth, MaxDepth):-
+	make_move(Board, Board, Depth, MaxDepth, Final_Y, Final_X):-
         not(Depth = MaxDepth),
         find_corner(Board, Y, X, a),
-        Y is 1,
-        X is 2, 
+        Y is Final_Y,
+        X is Final_X, 
     	!.
-	make_move(Board, NewBoard, Depth, MaxDepth):-
+	make_move(Board, NewBoard, Depth, MaxDepth,  Final_Y, Final_X):-
         not(Depth = MaxDepth),
         one_step(Board, BoardT),
         IncDepth is Depth + 1,
-    	make_move(BoardT, NewBoard, IncDepth, MaxDepth).
+    	make_move(BoardT, NewBoard, IncDepth, MaxDepth, Final_Y, Final_X),
+        !.
 
 	
 
