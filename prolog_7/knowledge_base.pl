@@ -10,9 +10,44 @@
 
 
 board([[w, w, w, w, w],
-       [w, a, b, c, w],
-       [w, x, e, d, w],
+       [w, a, d, x, w],
+       [w, x, d, x, w],
        [w, w, w, w, w]]).
+
+	depth(2).
+	depth(4).
+	depth(8).
+	depth(16).
+	depth(32).
+	depth(64).
+	depth(128).
+	depth(256).
+	depth(512).
+	
+	block(b).
+	block(c).
+	block(d).
+	block(e).
+    block(a).
+
+	direction(down).
+	direction(left).
+	direction(up).
+	direction(right).
+
+	map(a, X):- X is 1.
+	map(b, X):- X is 2.
+	map(c, X):- X is 3.
+	map(d, X):- X is 4.
+	map(e, X):- X is 5.
+	map(f, X):- X is 6.
+	map(g, X):- X is 7.
+	map(h, X):- X is 8.
+	map(i, X):- X is 9.
+	map(j, X):- X is 10.
+	
+	
+	
 
 
 % String manipulation
@@ -28,31 +63,6 @@ board([[w, w, w, w, w],
 %------------------
 	find_corner(Board, Y, X, Character):-
         position(Board, Y, X, Character), !.
-
-	
-	block(b).
-	block(c).
-	block(d).
-	block(e).
-    block(a).
-%	block(f).
-%    block(a).
-
-	
-% 	block(g).
-%	block(h).
-%	block(i).
-%	block(j).
-%	block(l).
-%	block(m).
-%	block(n).
-%	block(o).
-%	block(p).
-	direction(down).
-	direction(left).
-	direction(up).
-	direction(right).
-	
 	
 
 %------------------
@@ -94,7 +104,7 @@ board([[w, w, w, w, w],
     	find_all_objects_unwrap(L, [], Objects, Character).
 %------------------	
 
-
+  
 
 %------------------
     find_all_cords_of_block_unwrap(_, [], ListOfCords, ListOfCords).	
@@ -137,6 +147,7 @@ board([[w, w, w, w, w],
        direction(Dir),
        block(BlockCharacter),
        move_block(Board, BlockCharacter, Dir, NewBoard).
+	
 
 	
         
@@ -151,20 +162,36 @@ board([[w, w, w, w, w],
         get_new_cords(ListOfCords, ListOfCords1, Direction),
         replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter).
 %------------------
-	make_move(Board, Board, Depth, MaxDepth, Final_Y, Final_X):-
-        not(Depth = MaxDepth),
+	make_move(Board, Board, Depth, MaxDepth, Final_Y, Final_X, []):-
+        not(Depth > MaxDepth),
         find_corner(Board, Y, X, a),
         Y is Final_Y,
         X is Final_X, 
     	!.
-	make_move(Board, NewBoard, Depth, MaxDepth,  Final_Y, Final_X):-
-        not(Depth = MaxDepth),
+	make_move(Board, NewBoard, Depth, MaxDepth,  Final_Y, Final_X, MOVES):-
+        not(Depth > MaxDepth),
         one_step(Board, BoardT),
         IncDepth is Depth + 1,
-    	make_move(BoardT, NewBoard, IncDepth, MaxDepth, Final_Y, Final_X),
-        !.
-
+    	make_move(BoardT, NewBoard, IncDepth, MaxDepth, Final_Y, Final_X, MOVEST),
+        MOVES = [BoardT | MOVEST].
+    	!.
 	
+	przem(SX, SY, EX, EY):-
+        board(B),
+        przem_unwrap(B, SX, SY, EX, EY).
+	
+	przem_unwrap(SX, SY, EX, EY):-
+        SX is EY,
+        SY is EY,
+    	!.
+	przem_unwrap(Board, SX, SY, EX, EY):-
+        board(Board),
+        position(Board, SY, SX, H),
+        direction(Dir),
+        move_block(Board, H, Dir, NewBoard),
+        position(NewBoard, TY, TX, H),
+        przem_unwrap(NewBoard, TY, TX, EX, EY),!. 
+	    
 
 %------------------
     can_single_cell_move(Board, Y, X, Ydiff, Xdiff):-
