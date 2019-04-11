@@ -1,12 +1,20 @@
 % data structure representing board
-board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
-        [w  ,a  ,a  ,c  ,c  ,x  ,i  ,j  ,w  ],
-        [w  ,a  ,a  ,x  ,d  ,d  ,x  ,j  ,w  ],
-        [w  ,x  ,x  ,x  ,e  ,f  ,x  ,k ,w  ],
-        [w  ,b  ,b  ,x  ,e  ,g  ,x  ,k  ,w  ],
-        [w  ,b  ,b  ,x  ,x  ,x  ,l  ,l  ,w  ],
-        [w  ,b  ,b  ,x  ,h  ,h  ,l  ,l  ,w  ],
-        [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
+%board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
+%        [w  ,a  ,a  ,c  ,c  ,x  ,i  ,j  ,w  ],
+%        [w  ,a  ,a  ,x  ,d  ,d  ,x  ,j  ,w  ],
+%        [w  ,x  ,x  ,x  ,e  ,f  ,x  ,k ,w  ],
+%        [w  ,b  ,b  ,x  ,e  ,g  ,x  ,k  ,w  ],
+%        [w  ,b  ,b  ,x  ,x  ,x  ,l  ,l  ,w  ],
+%        [w  ,b  ,b  ,x  ,h  ,h  ,l  ,l  ,w  ],
+%        [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
+
+board([[w, w, w, w, w, w],
+      [w, a, x, x, f, w],
+      [w, x, x, e, x, w],
+      [w, b, d, x, x, w], 
+      [w, x, c, x, x ,w], 
+      [w, w, w, w, w, w]]).
+        
 
 % String manipulation
 	% n character in characters
@@ -19,6 +27,8 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         nth0(Y, Board, Column),
         nth0(X, Column, Character).
 %------------------
+	find_corner(Board, Y, X, Character):-
+        position(Board, Y, X, Character), !.
 
 	block(a).
 	block(b).
@@ -36,10 +46,12 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 	block(n).
 	block(o).
 	block(p).
-	direction(up).
 	direction(down).
 	direction(left).
+	direction(up).
 	direction(right).
+	
+	
 
 %------------------
 	is_position_free(Board, Y, X):-
@@ -98,7 +110,6 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 
 %------------------
     replace_cords_with_character(Board, Board, [], _).
-
 	replace_cords_with_character(Board, NewBoard, [H|T], BlockCharacter):-
         unpack_two_element_list(H, Y, X),
         insert_into_two_dimensional_array(Y, X, BlockCharacter, Board, Board1),
@@ -113,28 +124,40 @@ board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
         X1 is X + Xdiff,
         add_element(TemporaryListOfCords, [Y1, X1], TemporaryListOfCords1),
         move_cordinates(T, TemporaryListOfCords1, NewListOfCords, Ydiff, Xdiff).
-	
 	get_new_cords(ListOfCords, NewListOfCords, Direction):-
     	xydiff(Direction, Ydiff, Xdiff),
         move_cordinates(ListOfCords, [], NewListOfCords, Ydiff, Xdiff).
 %------------------
-%
+
 	one_step(Board, NewBoard):-
        block(BlockCharacter),
        position(Board, _, _, BlockCharacter),
        direction(Dir),
        move_block(Board, BlockCharacter, Dir, NewBoard).
-        
-%------------------    
+    
+%------------------
+	%Perfect move
+	move_block(Board, BlockCharacter, Direction, NewBoard):-
+        can_block_move(Board, a, right),
+        find_all_cords_of_block(Board, a, ListOfCords),
+    	replace_cords_with_character(Board, Board1, ListOfCords, x),
+        get_new_cords(ListOfCords, ListOfCords1, right),
+        replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter),!.
+	
 	move_block(Board, BlockCharacter, Direction, NewBoard):-
         can_block_move(Board, BlockCharacter, Direction),
         find_all_cords_of_block(Board, BlockCharacter, ListOfCords),
     	replace_cords_with_character(Board, Board1, ListOfCords, x),
         get_new_cords(ListOfCords, ListOfCords1, Direction),
         replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter).
-        
 %------------------
-
+	uloz(Board, _):-
+        find_corner(Board, Y, X, a),
+        Y is 1,
+        X is 4.
+	uloz(Board, NewBoard):-
+        one_step(Board, BoardT),
+    	uloz(BoardT, NewBoard).
 
 %------------------
     can_single_cell_move(Board, Y, X, Ydiff, Xdiff):-
