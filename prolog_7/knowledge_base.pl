@@ -10,8 +10,8 @@
 
 
 board([[w, w, w, w],
-       [w, a, x, w],
-       [w, x, x, w],
+       [w, a, b, w],
+       [w, x, c, w],
        [w, w, w, w]]).
 
 
@@ -32,17 +32,18 @@ board([[w, w, w, w],
 	
 	block(b).
 	block(c).
-	block(d).
-	block(e).
-	block(f).
     block(a).
+%	block(d).
+%	block(e).
+%	block(f).
+%    block(a).
 
 	
- 	block(g).
-	block(h).
-	block(i).
-	block(j).
-	block(l).
+% 	block(g).
+%	block(h).
+%	block(i).
+%	block(j).
+%	block(l).
 %	block(m).
 %	block(n).
 %	block(o).
@@ -150,14 +151,17 @@ board([[w, w, w, w],
         get_new_cords(ListOfCords, ListOfCords1, Direction),
         replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter).
 %------------------
-	make_move(Board, Board):-
+	make_move(Board, Board, Depth, MaxDepth):-
+        not(Depth = MaxDepth),
         find_corner(Board, Y, X, a),
         Y is 1,
         X is 2, 
     	!.
-	make_move(Board, NewBoard):-
+	make_move(Board, NewBoard, Depth, MaxDepth):-
+        not(Depth = MaxDepth),
         one_step(Board, BoardT),
-    	make_move(BoardT, NewBoard).
+        IncDepth is Depth + 1,
+    	make_move(BoardT, NewBoard, IncDepth, MaxDepth).
 
 	
 
