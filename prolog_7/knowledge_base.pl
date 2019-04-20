@@ -1,4 +1,6 @@
-% data structure representing board
+% FACTS
+
+ 
 %board([ [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ],
 %        [w  ,a  ,a  ,c  ,c  ,d  ,d  ,j  ,w  ],
 %        [w  ,a  ,a  ,c  ,c  ,d  ,d  ,j  ,w  ],
@@ -9,66 +11,83 @@
 %        [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
 
 
-board([[w, w, w, w, w],
-       [w, a, d, x, w],
-       [w, x, d, x, w],
+board([[w, w, w, w, w],   %
+       [w, a, x, x, w],   %a
+       [w, x, x, x, w],   %b
        [w, w, w, w, w]]).
 
-	depth(2).
-	depth(4).
-	depth(8).
-	depth(16).
-	depth(32).
-	depth(64).
-	depth(128).
-	depth(256).
-	depth(512).
-	
-	block(b).
-	block(c).
-	block(d).
-	block(e).
-    block(a).
+depth(2).
+depth(4).
+depth(8).
+depth(16).
+depth(32).
+depth(64).
+depth(128).
+depth(256).
+depth(512).
 
-	direction(down).
-	direction(left).
-	direction(up).
-	direction(right).
+block(b).
+block(c).
+block(d).
+block(e).
+block(a).
+direction(right).
+direction(down).
+direction(left).
+direction(up).
 
-	map(a, X):- X is 1.
-	map(b, X):- X is 2.
-	map(c, X):- X is 3.
-	map(d, X):- X is 4.
-	map(e, X):- X is 5.
-	map(f, X):- X is 6.
-	map(g, X):- X is 7.
-	map(h, X):- X is 8.
-	map(i, X):- X is 9.
-	map(j, X):- X is 10.
+height(a, X):- X is 1.
+height(b, X):- X is 2.
+height(c, X):- X is 3.
+height(d, X):- X is 4.
+height(e, X):- X is 5.
+height(f, X):- X is 6.
 	
-	
-	
+width(1, 1).
+width(2, 2).
+width(3, 3).
+width(4, 4).
+width(5, 5).
+width(6, 6).
+width(7, 7).
 
+% PREDICATS
 
-% String manipulation
+%------------------
+	max_depth(Board, MaxDepth):-
+        append(Board, FlatBoard),
+     	length(FlatBoard, MaxDepth).
+        
+
+        
+%------------------
+
+%------------------
 	% n character in characters
     n_character(N, Chars, Char):-
         string_chars(Chars, Str),
-        nth0(N, Str, Char).
-	
+        nth0(N, Str, Char).	
 %------------------	
+
+
+%------------------
 	position(Board, Y, X, Character):-
         nth0(Y, Board, Column),
         nth0(X, Column, Character).
 %------------------
+
+
+%------------------
 	find_corner(Board, Y, X, Character):-
         position(Board, Y, X, Character), !.
-	
+%------------------	
+
 
 %------------------
 	is_position_free(Board, Y, X):-
         position(Board, Y, X, 'x').
 %------------------    
+
 
 %------------------
     is_position_wall(Board, Y, X):-
@@ -119,6 +138,8 @@ board([[w, w, w, w, w],
         n_character(0, Character, ID),
         find_all_objects(Board, Objects, ID),
         find_all_cords_of_block_unwrap(Board, Objects, [], ListOfCords).
+%------------------
+
 
 %------------------
     replace_cords_with_character(Board, Board, [], _).
@@ -128,6 +149,7 @@ board([[w, w, w, w, w],
         replace_cords_with_character(Board1, NewBoard, T, BlockCharacter).
 %------------------
 
+
 %------------------
 	move_cordinates([], NewListOfCords, NewListOfCords , _, _).
 	move_cordinates([H|T], TemporaryListOfCords, NewListOfCords, Ydiff, Xdiff):-
@@ -136,9 +158,15 @@ board([[w, w, w, w, w],
         X1 is X + Xdiff,
         add_element(TemporaryListOfCords, [Y1, X1], TemporaryListOfCords1),
         move_cordinates(T, TemporaryListOfCords1, NewListOfCords, Ydiff, Xdiff).
+%------------------
+
+%------------------
 	get_new_cords(ListOfCords, NewListOfCords, Direction):-
     	xydiff(Direction, Ydiff, Xdiff),
         move_cordinates(ListOfCords, [], NewListOfCords, Ydiff, Xdiff).
+%------------------
+
+
 %------------------
 	one_step(Board, NewBoard):-
        move_block(Board, a, right, NewBoard), !.
@@ -147,20 +175,19 @@ board([[w, w, w, w, w],
        direction(Dir),
        block(BlockCharacter),
        move_block(Board, BlockCharacter, Dir, NewBoard).
-	
-
-	
-        
-    
 %------------------
-	%Perfect move
 
+	
+%------------------    
 	move_block(Board, BlockCharacter, Direction, NewBoard):-
         can_block_move(Board, BlockCharacter, Direction),
         find_all_cords_of_block(Board, BlockCharacter, ListOfCords),
     	replace_cords_with_character(Board, Board1, ListOfCords, x),
         get_new_cords(ListOfCords, ListOfCords1, Direction),
         replace_cords_with_character(Board1, NewBoard, ListOfCords1, BlockCharacter).
+%------------------
+
+
 %------------------
 	make_move(Board, Board, Depth, MaxDepth, Final_Y, Final_X, []):-
         not(Depth > MaxDepth),
@@ -173,24 +200,34 @@ board([[w, w, w, w, w],
         one_step(Board, BoardT),
         IncDepth is Depth + 1,
     	make_move(BoardT, NewBoard, IncDepth, MaxDepth, Final_Y, Final_X, MOVEST),
-        MOVES = [BoardT | MOVEST].
+        MOVES = [BoardT | MOVEST],
     	!.
-	
-	przem(SX, SY, EX, EY):-
+%------------------
+
+
+
+%------------------	
+	przem(StartY, StartX, EndY, EndX):-
+    	width(StartX, SX),
+        height(StartY, SY),
+    	width(EndX, EX),
+        height(EndY, EY),
         board(B),
-        przem_unwrap(B, SX, SY, EX, EY).
+        max_depth(B, MaxDepth),
+        przem_unwrap(B, SY, SX, EY, EX, 0, MaxDepth).
 	
-	przem_unwrap(SX, SY, EX, EY):-
-        SX is EY,
-        SY is EY,
-    	!.
-	przem_unwrap(Board, SX, SY, EX, EY):-
-        board(Board),
-        position(Board, SY, SX, H),
+	przem_unwrap(_, StartY, StartX, EndY, EndX, _, _):-
+        StartX = EndX,
+        StartY = EndY.
+
+	przem_unwrap(Board, StartY, StartX, EndY, EndX, Depth, MaxDepth):-
+        position(Board, StartY, StartX,  Char),
         direction(Dir),
-        move_block(Board, H, Dir, NewBoard),
-        position(NewBoard, TY, TX, H),
-        przem_unwrap(NewBoard, TY, TX, EX, EY),!. 
+        move_block(Board, Char, Dir, NewBoard),
+        position(NewBoard, TempY, TempX, Char),
+    	NewDepth = Depth + 1,
+        przem_unwrap(NewBoard, TempY, TempX, EndY, EndX, NewDepth, MaxDepth). 
+%------------------
 	    
 
 %------------------
@@ -205,7 +242,6 @@ board([[w, w, w, w, w],
 %------------------
 
 
-
 %------------------	
 	can_every_cell_move(_, [], _, _).
 	can_every_cell_move(Board, [H|T], Xdiff, Ydiff):-
@@ -213,7 +249,6 @@ board([[w, w, w, w, w],
         can_single_cell_move(Board, Y, X, Xdiff, Ydiff), 
         can_every_cell_move(Board, T, Xdiff, Ydiff).
 %------------------
-
 
 
 %------------------
@@ -264,7 +299,6 @@ board([[w, w, w, w, w],
 %------------------
 
 
-
 %------------------
     unpack_one_element_list([H|_], H).
 
@@ -276,5 +310,3 @@ board([[w, w, w, w, w],
 	unpack_three_element_list([H|T], H, B, C):-
         unpack_two_element_list(T, B, C).
 %------------------
-	
-
