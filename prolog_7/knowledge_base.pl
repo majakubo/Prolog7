@@ -8,10 +8,11 @@
 %        [w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ,w  ]]).
 
 
-board([[w, w, w, w, w],   
-       [w, a, b, x, w],   
-       [w, x, x, x, w],   
-       [w, w, w, w, w]]).
+board([[w, w, w, w, w, w, w],   
+       [w, a, b, x, x, x, w],   
+       [w, x, x, x, x, x, w],
+       [w, x, x, x, x, x, w],
+       [w, w, w, w, w, w, w]]).
 
 steps(2).
 steps(4).
@@ -35,18 +36,11 @@ direction(left).
 
 height(a, X):- X is 1.
 height(b, X):- X is 2.
-%height(c, X):- X is 3.
+height(c, X):- X is 3.
 %height(d, X):- X is 4.
 %height(e, X):- X is 5.
 %height(f, X):- X is 6.
 	
-width(1, 1).
-width(2, 2).
-width(3, 3).
-width(4, 4).
-width(5, 5).
-width(6, 6).
-width(7, 7).
 
 xydiff(D, Y, X):-
     D = 'left',
@@ -276,10 +270,9 @@ xydiff(D, Y, X):-
 
 	rozwiaz(FinalY, FinalX, FinalBoard, MOVES):-
     	height(FinalY, Y),
-    	width(FinalX, X),
         board(B),
     	steps(MaxSteps),
-    	make_move(B, FinalBoard, 0, MaxSteps, Y, X, MOVES), !.
+    	make_move(B, FinalBoard, 0, MaxSteps, Y, FinalX, MOVES), !.
      	
 %------------------
 
@@ -287,18 +280,17 @@ xydiff(D, Y, X):-
 
 %------------------	
 	przem(StartY, StartX, EndY, EndX):-
-    	width(StartX, SX),
         height(StartY, SY),
-    	width(EndX, EX),
         height(EndY, EY),
+    	
         board(B),
         max_steps(MaxSteps),
-        przem_unwrap(B, SY, SX, EY, EX, 0, MaxSteps).
+        przem_unwrap(B, SY, StartX, EY, EndX, 0, MaxSteps).
 	
 	przem_unwrap(_, StartY, StartX, EndY, EndX, Steps, MaxSteps):-
         not(Steps > MaxSteps),
     	StartX = EndX,
-        StartY = EndY, !.
+        StartY = EndY.
 
 	przem_unwrap(Board, StartY, StartX, EndY, EndX, Steps, MaxSteps):-
         not(Steps > MaxSteps),
@@ -307,7 +299,5 @@ xydiff(D, Y, X):-
         move_block(Board, Char, Dir, NewBoard),
         position(NewBoard, TempY, TempX, Char),
     	IncSteps = Steps + 1,
-        przem_unwrap(NewBoard, TempY, TempX, EndY, EndX, IncSteps, MaxSteps), !. 
+        przem_unwrap(NewBoard, TempY, TempX, EndY, EndX, IncSteps, MaxSteps). 
 %------------------
-	    
-
