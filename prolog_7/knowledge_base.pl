@@ -10,8 +10,8 @@
 
 board([[w, w, w, w, w, w, w],   
        [w, a, b, x, x, x, w],   
-       [w, x, x, x, x, x, w],
-       [w, x, x, x, x, x, w],
+       [w, x, b, x, x, x, w],
+       [w, x, b, x, x, x, w],
        [w, w, w, w, w, w, w]]).
 
 steps(2).
@@ -37,10 +37,21 @@ direction(left).
 height(a, X):- X is 1.
 height(b, X):- X is 2.
 height(c, X):- X is 3.
+
 %height(d, X):- X is 4.
 %height(e, X):- X is 5.
 %height(f, X):- X is 6.
-	
+height(a).
+height(b).
+height(c).
+
+width(1).
+width(2).
+width(3).
+width(4).
+width(5).
+
+
 
 xydiff(D, Y, X):-
     D = 'left',
@@ -276,21 +287,36 @@ xydiff(D, Y, X):-
      	
 %------------------
 
+max_height_width(MaxHeight, MaxWidth):-
+    board(B),
+    last(B, Row),
+    length(B, Height),
+    length(Row, Width),
+    MaxHeight is Height - 2,
+    MaxWidth is Width - 2.
 
+walidate_cords(StartY, StartX, EndY, EndX):-
+    height(EndY),
+    width(EndX),
+    height(StartY),
+    width(StartX).
+    
+translate_cords(StartY, EndY, SY, EY):-
+    height(StartY, SY),
+    height(EndY, EY).
 
 %------------------	
 	przem(StartY, StartX, EndY, EndX):-
-        height(StartY, SY),
-        height(EndY, EY),
-    	
-        board(B),
-        max_steps(MaxSteps),
+    	walidate_cords(StartY, StartX, EndY, EndX),    
+		translate_cords(StartY, EndY, SY, EY),    
+    	max_steps(MaxSteps),
+    	board(B),
         przem_unwrap(B, SY, StartX, EY, EndX, 0, MaxSteps).
 	
 	przem_unwrap(_, StartY, StartX, EndY, EndX, Steps, MaxSteps):-
         not(Steps > MaxSteps),
     	StartX = EndX,
-        StartY = EndY.
+        StartY = EndY,!.
 
 	przem_unwrap(Board, StartY, StartX, EndY, EndX, Steps, MaxSteps):-
         not(Steps > MaxSteps),
